@@ -1,3 +1,4 @@
+import sys
 from os import environ
 import time
 import asyncio
@@ -154,3 +155,10 @@ class TunfishControl:
         realm = u"tf_cb_router"
         runner = ApplicationRunner(url, realm, ssl=client_ctx, extra={'v1': data})
         runner.run(Component)
+
+def start():
+    args = sys.argv
+    from tunfish.tfctl import TunfishControl
+    ctl = TunfishControl()
+    ctl.start(args)
+

@@ -1,13 +1,13 @@
 from os import environ
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
-from tunfish.wamp.rpcs.PortierRPC import ServerRPC
+from tunfish.library.wamp import PortierRPC
 
 
 class Component(ApplicationSession):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.srv_procedures = ServerRPC(self)
+        self.srv_procedures = PortierRPC(self)
 
     async def onJoin(self, details):
         # data json dict
@@ -63,3 +63,7 @@ class PortierServer:
         realm = u"tf_cb_router"
         runner = ApplicationRunner(url, realm, ssl=server_ctx)
         runner.run(Component)
+
+def start():
+    server = PortierServer()
+    server.start()

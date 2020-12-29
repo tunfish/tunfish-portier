@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_namespace_packages
 
-setup(name='tunfish-common',
+setup(name='tunfish-portier',
       version='0.1.0',
       description='Convenient VPN infrastructure on top of secure WireGuard tunnels',
       #long_description=README,
@@ -42,13 +42,17 @@ setup(name='tunfish-common',
       },
       zip_safe=False,
       test_suite='tunfish.test',
-      install_requires=[],
+      install_requires=[
+          'tunfish-common',
+          'pyroute2',
+      ],
 
       dependency_links=[
       ],
       entry_points={
           'console_scripts': [
-              'tf-client           = tunfish.client:start',
+              'tf-portier           = tunfish.portier:start',
+              'tfctl           = tunfish.tfctl:start',
           ],
       },
 )
