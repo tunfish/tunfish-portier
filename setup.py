@@ -45,6 +45,8 @@ setup(name='tunfish-portier',
       install_requires=[
           'tunfish-common',
           'pyroute2',
+          'sqlalchemy',
+          'sqlalchemy_utils',
       ],
 
       dependency_links=[
