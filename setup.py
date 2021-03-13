@@ -47,6 +47,8 @@ setup(name='tunfish-portier',
           'sqlalchemy',
           'sqlalchemy_utils',
           'psycopg2-binary',
+          'pysodium',
+          'pyOpenSSL',
       ],
 
       dependency_links=[
