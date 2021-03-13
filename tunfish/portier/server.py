@@ -2,6 +2,7 @@ from sqlalchemy import exc
 from tunfish.portier.model import Network, Gateway, Router, WireGuardNode
 from tunfish.portier.database.control import dbc
 from tunfish.portier.util import sa_to_dict
+from tunfish.portier.x509 import Certificate
 
 
 class PortierRPC:
@@ -77,7 +78,6 @@ class PortierRPC:
         except Exception as e:
             print(f"{e}")
 
-        from tunfish.tools.certificate import Certificate
         cert = Certificate()
         cert.gen_x509(name=data['name'])
 
