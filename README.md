@@ -3,7 +3,9 @@
 ## Create RSA key and get X.509 certificate
 ```sh
 pip install pki-client
-pki-client --ca-url=http://127.0.0.1:8000/ --ca-name=RootCA \
+
+export TF_CA_URL=http://localhost:3333/
+pki-client --ca-url=$(TF_CA_URL) --ca-name=RootCA \
            --cacert=cacert.pem --key=portier.key --certificate=portier.pem --profile=client --common-name-prefix=portier
 ```
 
