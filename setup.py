@@ -46,6 +46,7 @@ setup(name='tunfish-portier',
           'autobahn[msgpack]',
           'sqlalchemy',
           'sqlalchemy_utils',
+          'psycopg2-binary',
       ],
 
       dependency_links=[
