@@ -46,9 +46,10 @@ class PortierServer:
         # TLS
         # Setup server
 
-        cf = '/vagrant/certs/server.pem'
-        kf = '/vagrant/certs/server.key'
-        caf = '/vagrant/certs/ca.pem'
+        cf = environ.get('TF_X509_CERT', "portier.pem")
+        kf = environ.get('TF_X509_KEY', 'portier.key')
+        caf = environ.get('TF_X509_CACERT', 'cacert.pem')
+        url = environ.get("AUTOBAHN_DEMO_ROUTER", "wss://172.16.42.2:8080/ws")
 
         server_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
         server_ctx.verify_mode = ssl.CERT_REQUIRED
@@ -59,7 +60,6 @@ class PortierServer:
         server_ctx.set_ciphers('ECDH+AESGCM')
 
         # url = environ.get("AUTOBAHN_DEMO_ROUTER", u"wss://127.0.0.1:8080/ws")
-        url = environ.get("AUTOBAHN_DEMO_ROUTER", u"wss://172.16.42.2:8080/ws")
         print(f"URL: {url}")
         if six.PY2 and type(url) == six.binary_type:
             url = url.decode('utf8')

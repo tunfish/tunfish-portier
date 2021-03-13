@@ -1,5 +1,5 @@
 from sqlalchemy import exc
-from tunfish.library.model import Network, Gateway, Router, Node
+from tunfish.library.model import Network, Gateway, Router, WireGuardNode
 from tunfish.library.database.control import dbc
 from tunfish.util import sa_to_dict
 
@@ -46,7 +46,7 @@ class PortierRPC:
         print(f"Status: {self.__dict__}")
 
     def request_node_config(self, node_public_key: str):
-        node = self.dbc_handler.session.query(Network).filter(name=data['public_key']).one()
+        node = self.dbc_handler.session.query(WireGuardNode).filter(name=data['public_key']).one()
         return sa_to_dict(node)
 
     def add_network(self, data):
