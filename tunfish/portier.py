@@ -1,6 +1,6 @@
 from os import environ
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
-from tunfish.library.wamp import PortierRPC
+from tunfish.server import PortierRPC
 
 
 class Component(ApplicationSession):
@@ -20,6 +20,9 @@ class Component(ApplicationSession):
 
         await self.register(self.srv_procedures.request_status, u'com.portier.request_status')
         print("Registered com.portier.reguest_status")
+
+        await self.register(self.srv_procedures.request_node_config, u'com.portier.request_node_config')
+        print("Registered com.portier.request_node_config")
 
         await self.register(self.srv_procedures.add_network, u'com.portier.add_network')
         print("Registered com.portier.add_network")
