@@ -158,7 +158,7 @@ class TunfishControl:
 
 def start():
     args = sys.argv
-    from tunfish.tfctl import TunfishControl
+    from tunfish.portier.tfctl import TunfishControl
     ctl = TunfishControl()
     ctl.start(args)
 

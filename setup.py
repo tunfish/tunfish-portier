@@ -43,8 +43,7 @@ setup(name='tunfish-portier',
       zip_safe=False,
       test_suite='tunfish.test',
       install_requires=[
-          'tunfish-common',
-          'pyroute2',
+          'autobahn[msgpack]',
           'sqlalchemy',
           'sqlalchemy_utils',
       ],
@@ -53,8 +52,8 @@ setup(name='tunfish-portier',
       ],
       entry_points={
           'console_scripts': [
-              'tf-portier           = tunfish.portier:start',
-              'tfctl           = tunfish.tfctl:start',
+              'tf-portier      = tunfish.portier.core:start',
+              'tfctl           = tunfish.portier.tfctl:start',
           ],
       },
 )

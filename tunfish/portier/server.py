@@ -1,7 +1,7 @@
 from sqlalchemy import exc
-from tunfish.library.model import Network, Gateway, Router, WireGuardNode
-from tunfish.library.database.control import dbc
-from tunfish.util import sa_to_dict
+from tunfish.portier.model import Network, Gateway, Router, WireGuardNode
+from tunfish.portier.database.control import dbc
+from tunfish.portier.util import sa_to_dict
 
 
 class PortierRPC:
