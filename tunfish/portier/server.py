@@ -45,9 +45,25 @@ class PortierRPC:
     def request_status(self):
         print(f"Status: {self.__dict__}")
 
-    def request_node_config(self, node_public_key: str):
-        node = self.dbc_handler.session.query(WireGuardNode).filter(name=data['public_key']).one()
-        return sa_to_dict(node)
+    def request_node_config(self, node_public_key: str, format=None):
+        node = self.dbc_handler.session.query(WireGuardNode).filter(name='public_key').one()
+        peers = []
+        for n in node.networks:
+            net = self.dbc_handler.session.query(Network).filter_by(id=n)
+            for p in net.wireguard_nodes:
+                peers.append(self.dbc_handler.session.query(WireGuardNode).filter(id=p).one())
+
+        if not format:
+            peer_flat_list = []
+            for peer in peers:
+                peer_flat_list.append(sa_to_dict(peer))
+            return (sa_to_dict(node), peer_flat_list)
+
+        elif format == 'qr':
+            return self.node_config_to_qr(node=node, peers=peers)
+
+        elif format == 'txt':
+            return self.node_config_to_txt(node=node, peers=peers)
 
     def add_network(self, data):
         print(f"received data from tf-ctl: {data}")
@@ -101,3 +117,41 @@ class PortierRPC:
         print(f"network {network}")
 
         return network
+
+    def node_config_to_txt(self, node=None, peers=None):
+        peers = node.peers
+
+        address_lines = []
+        for v in node.addresses:
+            line = f"Address = {v}"
+            address_lines.append(line)
+        addr_txt = "\n".join(address_lines)
+
+        peer_lines = []
+        for peer in peers:
+            txt = f"""
+[Peer]
+PublicKey = {peer.public_key} 
+AllowedIPs = {", ".join(peer.allowed_ips)} 
+Endpoint = {peer.endpoint_addr}:{peer.endpoint_port}
+"""
+            peer_lines.append(txt)
+
+        peer_txt = "\n".join(peer_lines)
+
+        config_txt = f"""
+[Interface]
+ListenPort = {node.listen_port} 
+PrivateKey = < INSERT PRIVATE KEY HERE > 
+{addr_txt}
+
+{peer_txt}
+"""
+        return config_txt
+
+    def node_config_to_qr(self, node):
+        # qrencode -t ansiutf8 < wg-internal.conf
+        import qrcode
+        data = self.node_config_to_txt(node)
+        return qrcode.make(data)
+
