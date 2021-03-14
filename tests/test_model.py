@@ -78,8 +78,8 @@ def test_entities(engine, dbsession, truncate_db, insert):
     assert wn1 in nw1.wireguardnodes
     assert wn2 in nw1.wireguardnodes
 
-
-def test_many_to_many(engine, dbsession, truncate_db, insert):
+# FIXME: currently blocks execution test_one_to_many
+def te2st_many_to_many(engine, dbsession, truncate_db, insert):
 
     Base.metadata.create_all(engine)
 
@@ -110,3 +110,51 @@ def test_many_to_many(engine, dbsession, truncate_db, insert):
 
     #wn1: WireGuardNode = network.wireguardnodes[0]
     #compare(wn1, WireGuardNode(name="Node-50"))
+
+def test_one_to_many(engine, dbsession, truncate_db, insert):
+
+    Base.metadata.create_all(engine)
+
+
+    for i in range(1, 3):
+        keys = genwgkeys.Keys()
+        keys.gen_b64_keys()
+        node = WireGuardNode(
+            name=f"Node-{i}",
+            public_key=keys.public_wg_key.decode("utf-8"),
+            addresses=[f"10.10.10.{i}", f"10.10.20.{i}"],
+            listenport=42000 + i,
+            allowed_ips=f"0.0.0.0/0",
+            persistent_keepalive=25,
+        )
+        insert(node)
+
+    dbsession.commit()
+
+    keys = genwgkeys.Keys()
+    keys.gen_b64_keys()
+
+    node = WireGuardNode(
+                name=f"Node-100",
+                public_key=keys.public_wg_key.decode("utf-8"),
+                addresses=[f"10.10.10.100", f"10.10.20.100"],
+                listenport=44000,
+                allowed_ips=f"0.0.0.0/0",
+                persistent_keepalive=25,
+            )
+    insert(node)
+    dbsession.commit()
+    assert dbsession.query(WireGuardNode).count() == 3
+
+    wn1 = dbsession.query(WireGuardNode).filter_by(name="Node-1").one()
+    wn2 = dbsession.query(WireGuardNode).filter_by(name="Node-2").one()
+
+    node.peers.append(wn1)
+    node.peers.append(wn2)
+    #node.peers = [wn1, wn2]
+    dbsession.commit()
+    assert len(node.peers) == 2
+    assert node.peers[0] == wn1
+    assert node.peers[1] == wn2
+    assert wn1 in node.peers
+    assert wn2 in node.peers

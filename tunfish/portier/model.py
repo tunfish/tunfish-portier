@@ -1,7 +1,7 @@
 from sqlalchemy import (ARRAY, Boolean, Column, Date, ForeignKey, Integer,
                         Sequence, String)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.schema import Table
 
 Base = declarative_base()
@@ -107,3 +107,8 @@ class WireGuardNode(Base):
     persistent_keepalive = Column('persistent_keepalive', Integer, default=25)
 
     networks = relationship("Network", secondary=association_table, back_populates="wireguardnodes")
+
+    wireguardnode_id = Column(Integer, ForeignKey('wireguardnode.id'))
+    #peers = relationship('WireGuardNode', remote_side=[id], uselist=True)
+    #peers = relationship('WireGuardNode', remote_side='WireGuardNode.id', backref='wireguardnode')
+    peers = relationship("WireGuardNode", backref=backref('parent', remote_side=[id]))
