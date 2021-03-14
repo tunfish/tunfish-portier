@@ -1,5 +1,5 @@
 from sqlalchemy import exc
-from tunfish.portier.model import Network, Gateway, Router, WireGuardNode
+from tunfish.portier.model import Network, Gateway, Router, WireGuardNodes
 from tunfish.portier.database.control import dbc
 from tunfish.portier.util import sa_to_dict
 

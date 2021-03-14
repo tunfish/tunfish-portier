@@ -6,6 +6,8 @@ from tunfish.portier.database.create_network_table import create_network_table
 from tunfish.portier.database.create_node_table import create_node_table
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from tunfish.portier.model import Base
 
 
 class dbc:
@@ -31,7 +33,9 @@ class dbc:
     def create_db(self):
         print(f"create_db")
         create_postgresql_database(self.engine)
-        create_network_table(self.engine)
-        create_gw_table(self.engine)
-        create_router_table(self.engine)
-        create_node_table(self.engine)
+        #create_network_table(self.engine)
+        #create_gw_table(self.engine)
+        #create_router_table(self.engine)
+        #create_node_table(self.engine)
+        #Base = declarative_base()
+        Base.metadata.create_all(self.engine)

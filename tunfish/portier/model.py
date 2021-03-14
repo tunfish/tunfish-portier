@@ -1,13 +1,18 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
-from sqlalchemy import Integer, String, Date, Boolean
+from sqlalchemy import Integer, String, Date, Boolean, ARRAY
 from sqlalchemy import Sequence
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
+from sqlalchemy.schema import Table
 
 
 Base = declarative_base()
 
+association_table = Table('association', Base.metadata,
+    Column('network_id', Integer, ForeignKey('network.id')),
+    Column('wireguardnodes_id', Integer, ForeignKey('wireguardnodes.id'))
+)
 
 class Router(Base):
 
@@ -106,36 +111,44 @@ class Network(Base):
     id = Column(Integer, Sequence('nw_id_seq'), primary_key=True)
     name = Column('name', String(32), unique=True)
     enabled = Column('enabled', Boolean, default=False)
+    subnet = Column('subnet', String(32), unique=True)
     gateway = relationship("Gateway", back_populates='network')
     router = relationship("Router", back_populates='network')
-    wireguardnode = relationship("WireGuardNode", back_populates='network')
 
-    def __init__(self, *args, **kwargs):
+    #wireguardnodes_id = Column(Integer, ForeignKey('wireguardnodes.id'))
+    wireguardnodes = relationship("WireGuardNodes", secondary=association_table, back_populates='network')
+
+    def __indit__(self, *args, **kwargs):
         self.name = kwargs.get('name')
         self.enabled = kwargs.get('enabled')
+        self.subnet = kwargs.get('subnet')
 
     def __repr__(self):
         return "name='%s', enabled='%s'" % (self.name, self.enabled)
 
 
-class WireGuardNode(Base):
+class WireGuardNodes(Base):
 
-    __tablename__ = 'wireguardnode'
+    __tablename__ = 'wireguardnodes'
 
     id = Column(Integer, Sequence('node_id_seq'), primary_key=True)
     name = Column('name', String(32), unique=True)
     public_key = Column('public_key', String(44), unique=True, default=None)
+    addresses = Column('addresses', ARRAY(String(32)), unique=True, default=None)
+    listenport = Column('listenport', Integer, default=None)
     endpoint_addr = Column('endpoint_addr', String(32), default=None)
     endpoint_port = Column('endpoint_port', Integer, default=None)
     allowed_ips = Column('allowed_ips', String(32), default='0.0.0.0/0')
     persistent_keepalive = Column('persistent_keepalive', Integer, default=25)
 
-    network_id = Column(Integer, ForeignKey('network.id'))
-    network = relationship("Network", back_populates="wireguardnode")
+    #network_id = Column(Integer, ForeignKey('network.id'))
+    network = relationship("Network", secondary=association_table, back_populates="wireguardnodes")
 
-    def __init__(self, *args, **kwargs):
+    def __indit__(self, *args, **kwargs):
         self.name = kwargs.get('name')
         self.public_key = kwargs.get('public_key')
+        self.addresses = kwargs.get('addresses')
+        self.listenport = kwargs.get('listenport')
         self.endpoint_addr = kwargs.get('endpoint_addr')
         self.endpoint_port = kwargs.get('endpoint_port')
         self.allowed_ips = kwargs.get('allowed_ips')
