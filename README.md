@@ -1,5 +1,6 @@
 # Quickstart
 
+
 ## Quick setup
 ```sh
 export TF_CA_URL=http://localhost:3333/
@@ -32,4 +33,14 @@ pip install --editable .
 ```sh
 export TF_BROKER_URL=wss://localhost:8080/ws
 TF_X509_CERT=portier.pem TF_X509_KEY=portier.key TF_X509_CACERT=cacert.pem AUTOBAHN_DEMO_ROUTER=${TF_BROKER_URL} tf-portier
+```
+
+
+## Tests
+```sh
+# Invoke PostgreSQL
+docker run -it --rm --publish=5432:5432 --env=POSTGRES_HOST_AUTH_METHOD=trust postgres:13.2
+
+# Invoke tests
+make test
 ```
