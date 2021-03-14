@@ -1,4 +1,6 @@
-from sqlalchemy import exc, inspect
+from sqlalchemy import inspect
+import pysodium
+
 
 def sa_to_dict(obj):
     """
@@ -10,3 +12,7 @@ def sa_to_dict(obj):
     """
     return {c.key: getattr(obj, c.key)
             for c in inspect(obj).mapper.column_attrs}
+
+
+def gen_keypair():
+    return pysodium.crypto_box_keypair()
