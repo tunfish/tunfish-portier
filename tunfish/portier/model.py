@@ -1,18 +1,17 @@
+from sqlalchemy import (ARRAY, Boolean, Column, Date, ForeignKey, Integer,
+                        Sequence, String)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
-from sqlalchemy import Integer, String, Date, Boolean, ARRAY
-from sqlalchemy import Sequence
 from sqlalchemy.orm import relationship
-from sqlalchemy import ForeignKey
 from sqlalchemy.schema import Table
-
 
 Base = declarative_base()
 
+
 association_table = Table('association', Base.metadata,
     Column('network_id', Integer, ForeignKey('network.id')),
-    Column('wireguardnodes_id', Integer, ForeignKey('wireguardnodes.id'))
+    Column('wireguardnode_id', Integer, ForeignKey('wireguardnode.id'))
 )
+
 
 class Router(Base):
 
@@ -43,25 +42,6 @@ class Router(Base):
     endpoint = Column('endpoint', String(32), default=None)
     allowed_ips = Column('allowed_ips', String(32), default='0.0.0.0/0')
 
-    def __init__(self, *args, **kwargs):
-
-        self.device_id = kwargs.get('device_id')
-        self.ip = kwargs.get('ip')
-        self.device_pw = kwargs.get('device_pw')
-        self.user_pw = kwargs.get('user_pw')
-        self.wgprvkey = kwargs.get('wgprvkey')
-        self.wgpubkey = kwargs.get('wgpubkey')
-        self.doa = kwargs.get('doa')
-        self.dod = kwargs.get('dod')
-        self.hw_model = kwargs.get('hw_model')
-        self.hw_version = kwargs.get('hw_version')
-        self.sw_version = kwargs.get('sw_version')
-        self.blocked = kwargs.get('blocked')
-        self.gateway = kwargs.get('gateway')
-        self.listenport = kwargs.get('listenport')
-        self.endpoint = kwargs.get('endpoint')
-        self.allowed_ips = kwargs.get('allowed_ips')
-
     def __repr__(self):
         return "\ndevice_id='%s', \nip='%s', \ndevice_pw='%s', \nuser_pw='%s', \nwgprvkey='%s', \nwgpubkey='%s'," \
                "\ndoa='%s', \ndod='%s', \nhw_model='%s', \nhw_version='%s', \nsw_version='%s', \nblocked='%s'," \
@@ -90,15 +70,6 @@ class Gateway(Base):
     network_id = Column(Integer, ForeignKey('network.id'))
     network = relationship("Network", back_populates="gateway")
 
-    def __init__(self, *args, **kwargs):
-        self.name = kwargs.get('name')
-        self.os = kwargs.get('os')
-        self.ip = kwargs.get('ip')
-        self.host = kwargs.get('host')
-        self.domain = kwargs.get('domain')
-        self.tld = kwargs.get('tld')
-        self.active = kwargs.get('active')
-
     def __repr__(self):
         return "name='%s', os='%s', ip='%s', host='%s', domain='%s', tld='%s', router='%s'" % (
                                 self.name, self.os, self.ip, self.host, self.domain, self.tld, self.router)
@@ -115,21 +86,15 @@ class Network(Base):
     gateway = relationship("Gateway", back_populates='network')
     router = relationship("Router", back_populates='network')
 
-    #wireguardnodes_id = Column(Integer, ForeignKey('wireguardnodes.id'))
-    wireguardnodes = relationship("WireGuardNodes", secondary=association_table, back_populates='network')
-
-    def __indit__(self, *args, **kwargs):
-        self.name = kwargs.get('name')
-        self.enabled = kwargs.get('enabled')
-        self.subnet = kwargs.get('subnet')
+    wireguardnodes = relationship("WireGuardNode", secondary=association_table, back_populates="networks")
 
     def __repr__(self):
         return "name='%s', enabled='%s'" % (self.name, self.enabled)
 
 
-class WireGuardNodes(Base):
+class WireGuardNode(Base):
 
-    __tablename__ = 'wireguardnodes'
+    __tablename__ = 'wireguardnode'
 
     id = Column(Integer, Sequence('node_id_seq'), primary_key=True)
     name = Column('name', String(32), unique=True)
@@ -141,15 +106,4 @@ class WireGuardNodes(Base):
     allowed_ips = Column('allowed_ips', String(32), default='0.0.0.0/0')
     persistent_keepalive = Column('persistent_keepalive', Integer, default=25)
 
-    #network_id = Column(Integer, ForeignKey('network.id'))
-    network = relationship("Network", secondary=association_table, back_populates="wireguardnodes")
-
-    def __indit__(self, *args, **kwargs):
-        self.name = kwargs.get('name')
-        self.public_key = kwargs.get('public_key')
-        self.addresses = kwargs.get('addresses')
-        self.listenport = kwargs.get('listenport')
-        self.endpoint_addr = kwargs.get('endpoint_addr')
-        self.endpoint_port = kwargs.get('endpoint_port')
-        self.allowed_ips = kwargs.get('allowed_ips')
-        self.persistent_keepalive = kwargs.get('persistent_keepalive')
+    networks = relationship("Network", secondary=association_table, back_populates="wireguardnodes")

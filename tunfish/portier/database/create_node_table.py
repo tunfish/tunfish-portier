@@ -1,6 +1,6 @@
 # create_node_table.py
-from tunfish.portier.model import WireGuardNodes
+from tunfish.portier.model import WireGuardNode
 
 
 def create_node_table(engine):
-    WireGuardNodes.__table__.create(bind=engine, checkfirst=True)
+    WireGuardNode.__table__.create(bind=engine, checkfirst=True)

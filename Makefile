@@ -14,7 +14,7 @@ $(eval pki-client   := $(venv)/bin/pki-client)
 # =====
 
 # Install requirements for development.
-setup-package: setup-virtualenv
+setup-package: virtualenv-dev
 	@test -e $(tf-portier) || $(pip) install --editable .
 
 
