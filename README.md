@@ -1,7 +1,13 @@
-# Quickstart
+![](https://github.com/tunfish/tunfish-portier/workflows/Tests/badge.svg)
 
+# Tunfish Portier
+
+## About
+
+Tunfish manager and coordinator. Assigns clients to nodes, announces services.
 
 ## Quick setup
+
 ```sh
 export TF_CA_URL=http://localhost:3333/
 export TF_BROKER_URL=wss://localhost:8080/ws
@@ -11,7 +17,7 @@ make run
 ```
 
 
-## Setup
+## Verbose setup
 
 ### Create RSA key and get X.509 certificate
 ```sh
