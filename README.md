@@ -1,4 +1,5 @@
 ![](https://github.com/tunfish/tunfish-portier/workflows/Tests/badge.svg)
+![](https://codecov.io/gh/tunfish/tunfish-portier/branch/main/graph/badge.svg)
 
 # Tunfish Portier
 
@@ -49,4 +50,7 @@ docker run -it --rm --publish=5432:5432 --env=POSTGRES_HOST_AUTH_METHOD=trust po
 
 # Invoke tests
 make test
+
+# Invoke tests with code coverage
+make coverage
 ```
