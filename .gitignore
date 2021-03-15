@@ -3,9 +3,9 @@
 __pycache__
 *.pem
 *.key
-<<<<<<< HEAD
+#<<<<<<< HEAD
 *.csr
-=======
+#=======
 .coverage
 coverage.xml
->>>>>>> 83e1e786be3be2eba29b6de377cb18532e9e92a9
+#>>>>>>> 83e1e786be3be2eba29b6de377cb18532e9e92a9
