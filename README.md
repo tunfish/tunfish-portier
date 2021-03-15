@@ -1,7 +1,14 @@
-# Quickstart
+![](https://github.com/tunfish/tunfish-portier/workflows/Tests/badge.svg)
+![](https://codecov.io/gh/tunfish/tunfish-portier/branch/main/graph/badge.svg)
 
+# Tunfish Portier
+
+## About
+
+Tunfish manager and coordinator. Assigns clients to nodes, announces services.
 
 ## Quick setup
+
 ```sh
 export TF_CA_URL=http://localhost:3333/
 export TF_BROKER_URL=wss://localhost:8080/ws
@@ -11,7 +18,7 @@ make run
 ```
 
 
-## Setup
+## Verbose setup
 
 ### Create RSA key and get X.509 certificate
 ```sh
@@ -43,4 +50,7 @@ docker run -it --rm --publish=5432:5432 --env=POSTGRES_HOST_AUTH_METHOD=trust po
 
 # Invoke tests
 make test
+
+# Invoke tests with code coverage
+make coverage
 ```

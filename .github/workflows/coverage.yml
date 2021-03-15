@@ -1,0 +1,56 @@
+name: Coverage
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+
+  tests:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ "3.9" ]
+        include:
+        - os: ubuntu-latest
+          path: ~/.cache/pip
+
+    # https://docs.github.com/en/free-pro-team@latest/actions/guides/about-service-containers
+    services:
+
+      postgresql:
+        image: postgres:13.2
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    name: Python ${{ matrix.python-version }} on OS ${{ matrix.os }}
+    steps:
+
+      - name: Acquire sources
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+
+      - name: Apply caching of dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.path }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('setup.py', 'requirements-test.txt') }}
+
+      - name: Run tests with coverage
+        run: make coverage
+
+      - name: Upload coverage to Codecov.io
+        uses: codecov/codecov-action@v1

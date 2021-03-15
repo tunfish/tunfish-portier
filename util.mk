@@ -32,3 +32,6 @@ pytest: setup-package
 	$(pytest) tests -vvv
 
 test: pytest
+
+coverage: setup-package
+	$(pytest) tests --cov=$(package-name) --cov-report=term --cov-report=xml -vvv

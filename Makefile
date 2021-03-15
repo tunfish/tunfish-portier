@@ -5,8 +5,9 @@ include util.mk
 # Configuration
 # =============
 
-$(eval tf-portier   := $(venv)/bin/tf-portier)
-$(eval pki-client   := $(venv)/bin/pki-client)
+$(eval tf-portier    := $(venv)/bin/tf-portier)
+$(eval pki-client    := $(venv)/bin/pki-client)
+$(eval package-name  := tunfish)
 
 
 # =====
