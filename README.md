@@ -25,7 +25,7 @@ make run
 pip install pki-client
 
 export TF_CA_URL=http://localhost:3333/
-pki-client --ca-url=$(TF_CA_URL) --ca-name=RootCA \
+pki-client --ca-url=${TF_CA_URL} --ca-name=RootCA \
            --cacert=cacert.pem --key=portier.key --certificate=portier.pem --profile=client --common-name-prefix=portier
 ```
 
