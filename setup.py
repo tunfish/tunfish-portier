@@ -49,6 +49,7 @@ setup(name='tunfish-portier',
           'psycopg2-binary',
           'pysodium',
           'pyOpenSSL',
+          'environs',
       ],
 
       dependency_links=[

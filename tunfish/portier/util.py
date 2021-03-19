@@ -1,5 +1,9 @@
+from pathlib import Path
+
 from sqlalchemy import inspect
 import pysodium
+
+from environs import Env
 
 
 def sa_to_dict(obj):
@@ -16,3 +20,10 @@ def sa_to_dict(obj):
 
 def gen_keypair():
     return pysodium.crypto_box_keypair()
+
+
+def read_config():
+    here = Path(__file__).parent.parent.parent
+
+    env = Env(expand_vars=True)
+    env.read_env(here / 'etc/tunfish/config/.env', recurse=False)

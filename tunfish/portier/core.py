@@ -1,7 +1,7 @@
 from os import environ
 from autobahn.asyncio.wamp import ApplicationSession, ApplicationRunner
 from tunfish.portier.server import PortierRPC
-
+from tunfish.portier.util import read_config
 
 class Component(ApplicationSession):
 
@@ -46,10 +46,12 @@ class PortierServer:
         # TLS
         # Setup server
 
+        read_config()
+
         cf = environ.get('TF_X509_CERT', "portier.pem")
         kf = environ.get('TF_X509_KEY', 'portier.key')
         caf = environ.get('TF_X509_CACERT', 'cacert.pem')
-        url = environ.get("AUTOBAHN_DEMO_ROUTER", "wss://172.16.42.2:8080/ws")
+        url = environ.get("BROKER_URL", "wss://172.16.42.2:8080/ws")
 
         server_ctx = ssl.SSLContext()
 
