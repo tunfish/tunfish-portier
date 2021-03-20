@@ -78,8 +78,10 @@ def test_entities(engine, dbsession, truncate_db, insert):
     assert wn1 in nw1.wireguardnodes
     assert wn2 in nw1.wireguardnodes
 
-# FIXME: currently blocks execution test_one_to_many
-def te2st_many_to_many(engine, dbsession, truncate_db, insert):
+    dbsession.close()
+
+
+def test_many_to_many(engine, dbsession, truncate_db, insert):
 
     Base.metadata.create_all(engine)
 
@@ -111,10 +113,11 @@ def te2st_many_to_many(engine, dbsession, truncate_db, insert):
     #wn1: WireGuardNode = network.wireguardnodes[0]
     #compare(wn1, WireGuardNode(name="Node-50"))
 
+    dbsession.close()
+
 def test_one_to_many(engine, dbsession, truncate_db, insert):
 
     Base.metadata.create_all(engine)
-
 
     for i in range(1, 3):
         keys = genwgkeys.Keys()
@@ -158,3 +161,5 @@ def test_one_to_many(engine, dbsession, truncate_db, insert):
     assert node.peers[1] == wn2
     assert wn1 in node.peers
     assert wn2 in node.peers
+
+    dbsession.close()
